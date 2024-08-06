@@ -32,9 +32,6 @@ jobs:
           sudo apt-get install -y curl
           curl -v https://www.google.com
 
-      - name: Run build script
-        run: node src/data/clientesAfectados.json.js
-
       - run: npm ci
       - run: npm run build
 
