@@ -1,12 +1,9 @@
 name: Deploy
 
 on:
-  # Run this workflow whenever a new commit is pushed to main.
-  push: {branches: [main]}
-  # Run this workflow once per day, at 10:15 UTC
-  
-  # Run this workflow when triggered manually in GitHub’s UI.
-  workflow_dispatch: {}
+  push:
+    branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -17,17 +14,36 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
-      - run: npm ci
-      - run: npm run build
-      - uses: actions/configure-pages@v3
-      - uses: actions/upload-pages-artifact@v1
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Network diagnostics
+        run: |
+          echo "Running network diagnostics..."
+          sudo apt-get install -y curl
+          curl -v https://apps.sec.cl
+          curl -v https://www.google.com
+
+      - name: Run build script
+        run: node src/data/clientesAfectados.json.js
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v3
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v1
         with:
           path: dist
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
