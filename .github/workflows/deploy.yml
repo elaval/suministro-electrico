@@ -30,8 +30,9 @@ jobs:
         run: |
           echo "Running network diagnostics..."
           sudo apt-get install -y curl
-          curl -v https://apps.sec.cl
           curl -v https://www.google.com
+          curl -v https://apps.sec.cl
+
 
       - name: Run build script
         run: node src/data/clientesAfectados.json.js
