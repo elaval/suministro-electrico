@@ -23,7 +23,8 @@ Plot.plot({
       x: (d) =>
         moment.utc(`${d.anho}-${d.mes}-${d.dia} ${d.hora}`, `YYYY-M-D H`).toDate(),
       y: "clientes_afectados",
-      fill: (d) => "afectados"
+      fill: (d) => "afectados",
+      tip:true
     })
   ]
 })
@@ -42,7 +43,8 @@ Plot.plot({
       x: (d) =>
         moment.utc(`${d.anho}-${d.mes}-${d.dia} ${d.hora}`, `YYYY-M-D H`).toDate(),
       y: "clientes_afectados",
-      fill: (d) => "afectados"
+      fill: (d) => "afectados",
+      tip:true
     })
   ]
 })
