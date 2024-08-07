@@ -10,8 +10,9 @@
 <link rel="modulepreload" href="./_observablehq/client.js">
 <link rel="modulepreload" href="./_observablehq/runtime.js">
 <link rel="modulepreload" href="./_observablehq/stdlib.js">
-<link rel="modulepreload" href="./_npm/moment@2.30.1/_esm.js">
+<link rel="modulepreload" href="./_npm/moment-timezone@0.5.45/_esm.js">
 <link rel="modulepreload" href="./_npm/@observablehq/plot@0.6.16/_esm.js">
+<link rel="modulepreload" href="./_npm/moment@2.30.1/_esm.js">
 <link rel="modulepreload" href="./_npm/d3@7.9.0/_esm.js">
 <link rel="modulepreload" href="./_npm/isoformat@0.2.1/_esm.js">
 <link rel="modulepreload" href="./_npm/interval-tree-1d@1.0.4/_esm.js">
@@ -55,23 +56,26 @@
 import {define} from "./_observablehq/client.js";
 import {registerFile} from "./_observablehq/stdlib.js";
 
-registerFile("./data/clientesAfectados.json", {"name":"./data/clientesAfectados.json","mimeType":"application/json","path":"./_file/data/clientesAfectados.feef4d57.json","lastModified":1722981934905});
+registerFile("./data/clientesAfectados.json", {"name":"./data/clientesAfectados.json","mimeType":"application/json","path":"./_file/data/clientesAfectados.d1525c47.json","lastModified":1722997616171});
 
-define({id: "e63f74d9", inputs: ["FileAttachment"], outputs: ["dataClientesAfectados"], body: async (FileAttachment) => {
+define({id: "813f3cfd", inputs: ["FileAttachment"], outputs: ["dataClientesAfectados","chileTimeZone"], body: async (FileAttachment) => {
 const dataClientesAfectados = await FileAttachment("./data/clientesAfectados.json").json();
-return {dataClientesAfectados};
+
+const chileTimeZone = 'America/Santiago';
+return {dataClientesAfectados,chileTimeZone};
 }});
 
-define({id: "8c593d25", inputs: ["Plot","dataClientesAfectados","moment","display"], body: async (Plot,dataClientesAfectados,moment,display) => {
+define({id: "7f6d84d3", inputs: ["Plot","dataClientesAfectados","moment","display"], body: async (Plot,dataClientesAfectados,moment,display) => {
 display(await(
 Plot.plot({
   marginLeft: 90,
   y: { grid: true },
+  //x: {tickFormat:d => moment.tz(d, chileTimeZone).format("H")},
   marks: [
     Plot.ruleY([0]),
-    Plot.areaY(dataClientesAfectados, {
+    Plot.areaY(dataClientesAfectados.slice(-96), {
       x: (d) =>
-        moment(`${d.anho}-${d.mes}-${d.dia} ${d.hora}`, `YYYY-M-D H`).toDate(),
+        moment.utc(`${d.anho}-${d.mes}-${d.dia} ${d.hora}`, `YYYY-M-D H`).toDate(),
       y: "clientes_afectados",
       fill: (d) => "afectados"
     })
@@ -80,8 +84,27 @@ Plot.plot({
 ))
 }});
 
-define({id: "62e0c1a2", outputs: ["moment"], body: async () => {
-const {default: moment} = await import("./_npm/moment@2.30.1/_esm.js");
+define({id: "eca9833d", inputs: ["Plot","dataClientesAfectados","moment","display"], body: async (Plot,dataClientesAfectados,moment,display) => {
+display(await(
+Plot.plot({
+  marginLeft: 90,
+  y: { grid: true },
+  //x: {tickFormat:d => moment.tz(d, chileTimeZone).format("H")},
+  marks: [
+    Plot.ruleY([0]),
+    Plot.areaY(dataClientesAfectados.slice(-24), {
+      x: (d) =>
+        moment.utc(`${d.anho}-${d.mes}-${d.dia} ${d.hora}`, `YYYY-M-D H`).toDate(),
+      y: "clientes_afectados",
+      fill: (d) => "afectados"
+    })
+  ]
+})
+))
+}});
+
+define({id: "9be7df21", outputs: ["moment"], body: async () => {
+const {default: moment} = await import("./_npm/moment-timezone@0.5.45/_esm.js");
 // Import required modules and configurations
 
 return {moment};
@@ -90,9 +113,13 @@ return {moment};
 </script>
 <div id="observablehq-center">
 <main id="observablehq-main" class="observablehq">
-<div class="observablehq observablehq--block"><!--:e63f74d9:--></div>
+<div class="observablehq observablehq--block"><!--:813f3cfd:--></div>
 <h1 id="clientes-afectados-por-suministro-el%C3%A9ctrico" tabindex="-1"><a class="observablehq-header-anchor" href="#clientes-afectados-por-suministro-el%C3%A9ctrico">Clientes afectados por suministro eléctrico</a></h1>
-<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:8c593d25:--></div>
+<h2 id="" tabindex="-1"><a class="observablehq-header-anchor" href="#"></a></h2>
+<h2 id="%C3%BAtimos-4-d%C3%ADas" tabindex="-1"><a class="observablehq-header-anchor" href="#%C3%BAtimos-4-d%C3%ADas">Útimos 4 días</a></h2>
+<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:7f6d84d3:--></div>
+<h2 id="%C3%BAltimas-24-horas" tabindex="-1"><a class="observablehq-header-anchor" href="#%C3%BAltimas-24-horas">Últimas 24 horas</a></h2>
+<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:eca9833d:--></div>
 <style>
 
 .hero {
@@ -135,9 +162,9 @@ return {moment};
 }
 
 </style>
-<div class="observablehq observablehq--block"><!--:62e0c1a2:--></div>
+<div class="observablehq observablehq--block"><!--:9be7df21:--></div>
 </main>
 <footer id="observablehq-footer">
-<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2024-08-06T21:09:18">Aug 6, 2024</a>.</div>
+<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2024-08-06T22:26:55">Aug 6, 2024</a>.</div>
 </footer>
 </div>

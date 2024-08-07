@@ -4,25 +4,50 @@ toc: false
 
 ```js
 const dataClientesAfectados = await FileAttachment("./data/clientesAfectados.json").json();
+
+const chileTimeZone = 'America/Santiago';
 ```
 
 # Clientes afectados por suministro eléctrico
+## 
+## Útimos 4 días
 
 ```js
 Plot.plot({
   marginLeft: 90,
   y: { grid: true },
+  //x: {tickFormat:d => moment.tz(d, chileTimeZone).format("H")},
   marks: [
     Plot.ruleY([0]),
-    Plot.areaY(dataClientesAfectados, {
+    Plot.areaY(dataClientesAfectados.slice(-96), {
       x: (d) =>
-        moment(`${d.anho}-${d.mes}-${d.dia} ${d.hora}`, `YYYY-M-D H`).toDate(),
+        moment.utc(`${d.anho}-${d.mes}-${d.dia} ${d.hora}`, `YYYY-M-D H`).toDate(),
       y: "clientes_afectados",
       fill: (d) => "afectados"
     })
   ]
 })
 ```
+
+## Últimas 24 horas 
+
+```js
+Plot.plot({
+  marginLeft: 90,
+  y: { grid: true },
+  //x: {tickFormat:d => moment.tz(d, chileTimeZone).format("H")},
+  marks: [
+    Plot.ruleY([0]),
+    Plot.areaY(dataClientesAfectados.slice(-24), {
+      x: (d) =>
+        moment.utc(`${d.anho}-${d.mes}-${d.dia} ${d.hora}`, `YYYY-M-D H`).toDate(),
+      y: "clientes_afectados",
+      fill: (d) => "afectados"
+    })
+  ]
+})
+```
+
 
 
 <style>
@@ -71,5 +96,5 @@ Plot.plot({
 
 ```js
 // Import required modules and configurations
-import moment from 'npm:moment'
+import moment from 'npm:moment-timezone'
 ```
