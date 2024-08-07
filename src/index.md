@@ -3,7 +3,7 @@ toc: false
 ---
 
 ```js
-const dataClientesAfectados = await FileAttachment("./data/response.json").json();
+const dataClientesAfectados = await FileAttachment("./data/clientesAfectados.json").json();
 ```
 
 # Clientes afectados por suministro eléctrico
